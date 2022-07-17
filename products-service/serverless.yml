@@ -1,0 +1,31 @@
+service: products-service
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  httpApi:
+    cors: true
+
+
+plugins:
+  - serverless-webpack
+  - serverless-auto-swagger
+
+custom:
+  webpack:
+    webpackConfig: './webpack.config.js'
+    packager: 'yarn'
+    includeModules: true
+  autoswagger:
+    typefiles: ['./src/types/product.ts']
+
+
+package:
+  individually: true
+  excludeDevDependencies: true
+
+functions:
+  - ${file(./sls/functions/getProductsList.yml)}
+  - ${file(./sls/functions/getProductById.yml)}
