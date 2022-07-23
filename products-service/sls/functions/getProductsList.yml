@@ -1,0 +1,12 @@
+getProductsList:
+  handler: ./src/functions/getProductsList/index.handler
+  events:
+    - httpApi:
+        method: GET
+        path: /products
+        responses:
+            200:
+              description: 'Return list of products'
+              bodyType: 'ProductsList'
+            404:
+              description: 'Products not found!'

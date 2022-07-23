@@ -1,0 +1,12 @@
+getProductById:
+  handler: ./src/functions/getProductById/index.handler
+  events:
+    - httpApi:
+        method: GET
+        path: /products/{productId}
+        responses:
+            200:
+              description: 'Return the product by id'
+              bodyType: 'Product'
+            404:
+              description: 'Product not found!'
