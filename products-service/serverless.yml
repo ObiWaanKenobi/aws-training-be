@@ -7,6 +7,12 @@ provider:
   runtime: nodejs14.x
   httpApi:
     cors: true
+  environment:
+    DB_NAME: ${self:custom.params.dbName}
+    DB_PORT: 5432
+    DB_HOST: ${self:custom.params.dbHost}
+    DB_USER_NAME: ${self:custom.params.dbUserName}
+    DB_PASSWORD: ${self:custom.params.dbPassword}
 
 
 plugins:
@@ -20,6 +26,12 @@ custom:
     includeModules: true
   autoswagger:
     typefiles: ['./src/types/product.ts']
+  params:
+    dbName: ${ssm:products_db_name}
+    dbHost: ${ssm:products_db_host}
+    dbUserName: ${ssm:products_db_user_name}
+    dbPassword: ${ssm:products_db_password}
+
 
 
 package:
@@ -29,3 +41,4 @@ package:
 functions:
   - ${file(./sls/functions/getProductsList.yml)}
   - ${file(./sls/functions/getProductById.yml)}
+  - ${file(./sls/functions/createProduct.yml)}

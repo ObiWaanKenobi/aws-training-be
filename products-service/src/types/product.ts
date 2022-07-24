@@ -1,14 +1,10 @@
 export interface Product {
-  id: number;
+  id: string;
   title: string;
-  price: number;
   description: string;
-  category: string;
-  image: string;
-  rating: {
-    rate: number;
-    count: number;
-  };
+  image_url: string;
+  price: number;
+  count: number;
 }
 
 export type ProductsList = Product[];
