@@ -1,0 +1,12 @@
+importProductsFile:
+  handler: ./src/functions/importProductsFile/index.handler
+  role: lambdaS3Role
+  events:
+    - http:
+        path: import
+        method: get
+        cors: true
+        request:
+          parameters:
+            querystrings:
+              name: true

@@ -1,0 +1,10 @@
+importFileParser:
+  handler: ./src/functions/importFileParser/index.handler
+  role: lambdaS3Role
+  events:
+    - s3:
+        bucket: ${self:custom.params.productsFilesBucket}
+        event: s3:ObjectCreated:*
+        rules:
+          - prefix: uploaded/
+        existing: true
