@@ -1,16 +1,13 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { createSuccessResponse, createErrorResponse } from '../../utils/apiResponse';
-import { get } from '../../utils/fetchApi';
-import { HttpCodes } from '../../types/httpCodes';
-
-const productsUrl = 'https://fakestoreapi.com/products';
+import { ProductsService } from '../../services/products-service';
 
 export const handler = async (event: APIGatewayProxyEvent) => {
   try {
-    const productId = event.pathParameters.productId;
-    const { data: product } = await get(`${productsUrl}/${productId}`);
+    console.log('getProductById lambda path params', event.pathParameters);
 
-    if (!product) return createErrorResponse('Product not found!', HttpCodes.NOT_FOUND);
+    const productId = event.pathParameters.productId;
+    const product = await ProductsService.getProductById(productId);
 
     return createSuccessResponse(product);
   } catch (error) {

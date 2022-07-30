@@ -7,9 +7,9 @@ export const createSuccessResponse = (body, statusCode = HttpCodes.OK) => {
   };
 };
 
-export const createErrorResponse = (error, statusCode = HttpCodes.INTERNAL_SERVER_ERROR) => {
+export const createErrorResponse = (error) => {
   return {
-    statusCode,
-    body: JSON.stringify({ message: error }),
+    statusCode: error.statusCode || HttpCodes.INTERNAL_SERVER_ERROR,
+    body: JSON.stringify({ message: error.message || error }),
   };
 };

@@ -1,0 +1,10 @@
+createProduct:
+  handler: ./src/functions/createProduct/index.handler
+  events:
+    - httpApi:
+        method: POST
+        path: /products
+        responses:
+            200:
+              description: 'Return created product'
+              bodyType: 'Product'
