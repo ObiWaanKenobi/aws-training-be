@@ -1,0 +1,31 @@
+service: 'import-service'
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  environment:
+    productsFilesBucket: ${self:custom.params.productsFilesBucket}
+
+plugins:
+  - serverless-webpack
+
+custom:
+  webpack:
+    webpackConfig: './webpack.config.js'
+    packager: 'yarn'
+    includeModules: true
+  params:
+    productsFilesBucket: products-files-bucket
+
+package:
+  individually: true
+  excludeDevDependencies: true
+
+functions:
+  - ${file(./sls/functions/importFileParser.yml)}
+  - ${file(./sls/functions/importProductsFile.yml)}
+
+resources:
+  - ${file(./sls/resources/iam.yml)}
