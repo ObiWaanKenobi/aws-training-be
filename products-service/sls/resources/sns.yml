@@ -1,0 +1,26 @@
+Resources:
+  CreateProductTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: ${self:service}-createProduct-topic
+
+  CreateProductTopicSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref CreateProductTopic
+      Protocol: email
+      Endpoint: egordienko0811@gmail.com
+
+  CreateProductTopicSubscriptionFiltered:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref CreateProductTopic
+      Protocol: email
+      Endpoint: evgenii_gordienko@epam.com
+      FilterPolicy:
+        productTitle:
+          - prefix: Motherboard
+        productPrice:
+          - numeric:
+            - '>='
+            - 70

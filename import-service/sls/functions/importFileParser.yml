@@ -1,6 +1,6 @@
 importFileParser:
   handler: ./src/functions/importFileParser/index.handler
-  role: lambdaS3Role
+  role: ImportFileParserRole
   events:
     - s3:
         bucket: ${self:custom.params.productsFilesBucket}

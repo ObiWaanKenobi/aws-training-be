@@ -3,11 +3,12 @@ import csv from 'csv-parser';
 import { S3Event } from 'aws-lambda';
 import { createSuccessResponse, createErrorResponse } from '../../utils/apiResponse';
 
-const { productsFilesBucket } = process.env;
+const { PRODUCTS_FILES_BUCKET, PRODUCTS_SQS_URL } = process.env;
 
 export const handler = async (event: S3Event) => {
   try {
     const s3Client = new AWS.S3();
+    const sqs = new AWS.SQS();
 
     for (const record of event.Records) {
       console.log(`s3 event record: ${JSON.stringify(record)}`);
@@ -15,10 +16,22 @@ export const handler = async (event: S3Event) => {
 
       await new Promise((_, reject) => {
         s3Client
-          .getObject({ Bucket: productsFilesBucket, Key: key })
+          .getObject({ Bucket: PRODUCTS_FILES_BUCKET, Key: key })
           .createReadStream()
           .pipe(csv())
-          .on('data', (data) => console.log(`parsed csv file: ${JSON.stringify(data)}`))
+          .on('data', async (data) => {
+            const product = JSON.stringify(data);
+            console.log(`parsed csv file: ${product}`);
+
+            const message = await sqs
+              .sendMessage({
+                QueueUrl: PRODUCTS_SQS_URL,
+                MessageBody: product,
+              })
+              .promise();
+
+            console.log(`Message was sent into sqs queue: ${JSON.stringify(message)}`);
+          })
           .on('error', (error) => {
             console.log(error);
             reject(error);
@@ -26,15 +39,15 @@ export const handler = async (event: S3Event) => {
           .on('end', async () => {
             await s3Client
               .copyObject({
-                Bucket: productsFilesBucket,
-                CopySource: `${productsFilesBucket}/${key}`,
+                Bucket: PRODUCTS_FILES_BUCKET,
+                CopySource: `${PRODUCTS_FILES_BUCKET}/${key}`,
                 Key: key.replace('uploaded', 'parsed'),
               })
               .promise();
 
             await s3Client
               .deleteObject({
-                Bucket: productsFilesBucket,
+                Bucket: PRODUCTS_FILES_BUCKET,
                 Key: key,
               })
               .promise();

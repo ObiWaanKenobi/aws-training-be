@@ -4,7 +4,7 @@ import { createSuccessResponse, createErrorResponse } from '../../utils/apiRespo
 import { HttpError } from '../../utils/errors';
 import { HttpCodes } from '../../types/httpCodes';
 
-const { productsFilesBucket } = process.env;
+const { PRODUCTS_FILES_BUCKET } = process.env;
 
 export const handler = async (event: APIGatewayProxyEvent) => {
   try {
@@ -15,7 +15,7 @@ export const handler = async (event: APIGatewayProxyEvent) => {
 
     const s3Client = new AWS.S3();
     const params = {
-      Bucket: productsFilesBucket,
+      Bucket: PRODUCTS_FILES_BUCKET,
       Key: `uploaded/${fileName}`,
       Expires: 60,
       ContentType: 'text/csv',

@@ -1,6 +1,6 @@
 importProductsFile:
   handler: ./src/functions/importProductsFile/index.handler
-  role: lambdaS3Role
+  role: ImportProductsFileRole
   events:
     - http:
         path: import
