@@ -1,0 +1,7 @@
+catalogBatchProcess:
+  handler: ./src/functions/catalogBatchProcess/index.handler
+  role: CatalogBatchProcessRole
+  events:
+    - sqs:
+        arn: !GetAtt CatalogItemsQueue.Arn
+        batchSize: 5

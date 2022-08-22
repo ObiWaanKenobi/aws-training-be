@@ -1,8 +1,8 @@
 Resources:
-  lambdaS3Role:
+  ImportProductsFileRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: ${self:service}-lambdaS3Role
+      RoleName: ${self:service}-importProductsFileRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -14,7 +14,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Policies:
-        - PolicyName: ${self:service}-lambdaS3RolePolicy
+        - PolicyName: ${self:service}-importProductsFilePolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
@@ -27,3 +27,28 @@ Resources:
                 Resource:
                   - 'arn:aws:s3:::*'
                   - 'arn:aws:s3:::*/*'
+
+  ImportFileParserRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: ${self:service}-importFileParserRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      Policies:
+        - PolicyName: ${self:service}-importFileParserPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sqs:SendMessage
+                Resource: !Sub 'arn:aws:sqs:*:${AWS::AccountId}:products-service-catalogItems-queue'

@@ -13,6 +13,7 @@ provider:
     DB_HOST: ${self:custom.params.dbHost}
     DB_USER_NAME: ${self:custom.params.dbUserName}
     DB_PASSWORD: ${self:custom.params.dbPassword}
+    PRODUCTS_SNS_ARN: !Ref CreateProductTopic
 
 
 plugins:
@@ -32,8 +33,6 @@ custom:
     dbUserName: ${ssm:products_db_user_name}
     dbPassword: ${ssm:products_db_password}
 
-
-
 package:
   individually: true
   excludeDevDependencies: true
@@ -42,3 +41,9 @@ functions:
   - ${file(./sls/functions/getProductsList.yml)}
   - ${file(./sls/functions/getProductById.yml)}
   - ${file(./sls/functions/createProduct.yml)}
+  - ${file(./sls/functions/catalogBatchProcess.yml)}
+
+resources:
+  - ${file(./sls/resources/iam.yml)}
+  - ${file(./sls/resources/sns.yml)}
+  - ${file(./sls/resources/sqs.yml)}

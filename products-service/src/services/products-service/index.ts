@@ -1,13 +1,14 @@
 import { Client } from 'pg';
-import { Product } from '../types/product';
-import { HttpCodes } from '../types/httpCodes';
-import { HttpError } from '../utils/errors';
+import { validationSchema } from './validationSchema';
+import { Product } from '../../types/product';
+import { HttpCodes } from '../../types/httpCodes';
+import { HttpError } from '../../utils/errors';
 import {
   getProductsQuery,
   getProductByIdQuery,
   createProductQuery,
   createStockQuery,
-} from '../utils/queries';
+} from '../../utils/queries';
 
 const { DB_NAME, DB_PORT, DB_HOST, DB_USER_NAME, DB_PASSWORD } = process.env;
 
@@ -55,6 +56,12 @@ export class ProductsService {
   }
 
   static async createProduct({ title, description, image_url, price, count }: Product) {
+    const { error } = validationSchema.validate(
+      { title, description, image_url, price, count },
+      { allowUnknown: false },
+    );
+    if (error) throw new HttpError(`Product body is not valid!: ${error}`, HttpCodes.BAD_REQUEST);
+
     const client = new Client(pgConfig);
     try {
       await client.connect();
@@ -71,7 +78,7 @@ export class ProductsService {
 
       const result = { ...product[0], ...stock[0] };
 
-      console.log('ProductsService.getProductsList() result', result);
+      console.log('ProductsService.createProduct() result', result);
 
       return result;
     } catch (error) {

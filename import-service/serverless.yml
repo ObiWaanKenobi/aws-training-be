@@ -6,7 +6,8 @@ provider:
   name: aws
   runtime: nodejs14.x
   environment:
-    productsFilesBucket: ${self:custom.params.productsFilesBucket}
+    PRODUCTS_FILES_BUCKET: ${self:custom.params.productsFilesBucket}
+    PRODUCTS_SQS_URL: ${self:custom.params.productsSqsUrl}
 
 plugins:
   - serverless-webpack
@@ -18,6 +19,7 @@ custom:
     includeModules: true
   params:
     productsFilesBucket: products-files-bucket
+    productsSqsUrl: ${ssm:products_sqs_url}
 
 package:
   individually: true

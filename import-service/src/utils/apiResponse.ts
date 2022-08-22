@@ -15,9 +15,11 @@ export const createSuccessResponse = (body, statusCode = HttpCodes.OK) => {
 };
 
 export const createErrorResponse = (error) => {
+  console.log(`An error was occured! - ${error}`);
+
   return {
-    statusCode: error.statusCode || HttpCodes.INTERNAL_SERVER_ERROR,
+    statusCode: error?.statusCode || HttpCodes.INTERNAL_SERVER_ERROR,
     headers: defaultHeaders,
-    body: JSON.stringify({ message: error.message || error }),
+    body: JSON.stringify({ message: error?.message || error }),
   };
 };
