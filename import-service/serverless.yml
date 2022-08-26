@@ -31,3 +31,4 @@ functions:
 
 resources:
   - ${file(./sls/resources/iam.yml)}
+  - ${file(./sls/resources/apiGateway.yml)}

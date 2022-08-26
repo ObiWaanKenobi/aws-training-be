@@ -10,3 +10,7 @@ importProductsFile:
           parameters:
             querystrings:
               name: true
+        authorizer:
+          name: basicAuthotizer
+          arn: 'arn:aws:lambda:${aws:region}:${aws:accountId}:function:authorization-service-dev-basicAuthorizer'
+          type: token
