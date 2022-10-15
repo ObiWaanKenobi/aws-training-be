@@ -1,0 +1,24 @@
+service: 'authorization-service'
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-webpack
+  - serverless-dotenv-plugin
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+custom:
+  webpack:
+    webpackConfig: './webpack.config.js'
+    packager: 'yarn'
+    includeModules: true
+
+package:
+  individually: true
+  excludeDevDependencies: true
+
+functions:
+  - ${file(./sls/functions/basicAuthorizer.yml)}
